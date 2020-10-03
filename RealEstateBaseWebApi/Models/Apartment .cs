@@ -7,6 +7,8 @@ namespace RealEstateBaseWebApi.Models
 {
     public class Apartment
     {
+        public int Id { get; set; }
+
         public int Rooms { get; set; }
         public int Floor { get; set; }
 

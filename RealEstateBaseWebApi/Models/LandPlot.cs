@@ -7,6 +7,8 @@ namespace RealEstateBaseWebApi.Models
 {
     public class LandPlot
     {
+        public int Id { get; set; }
+
         public string Type { get; set; } //for construction, farming, ...
 
         public float TotalSquare { get; set; }

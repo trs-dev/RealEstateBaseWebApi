@@ -7,6 +7,8 @@ namespace RealEstateBaseWebApi.Models
 {
     public class NonResidentialPremise
     {
+        public int Id { get; set; }
+
         public string Type { get; set; } //garage, office, shop, ...
 
         public int Rooms { get; set; }
