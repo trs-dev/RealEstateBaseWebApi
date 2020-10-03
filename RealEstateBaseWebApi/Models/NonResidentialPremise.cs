@@ -18,5 +18,7 @@ namespace RealEstateBaseWebApi.Models
         public int YearOfConstruction { get; set; }
 
         public string Address { get; set; }
+
+        public int Price { get; set; }
     }
 }

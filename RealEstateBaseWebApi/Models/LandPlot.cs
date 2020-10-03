@@ -12,5 +12,7 @@ namespace RealEstateBaseWebApi.Models
         public float TotalSquare { get; set; }
 
         public string Address { get; set; }
+
+        public int Price { get; set; }
     }
 }
