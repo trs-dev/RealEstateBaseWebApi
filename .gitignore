@@ -338,3 +338,5 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/RealEstateBaseWebApi/Properties/serviceDependencies.json
+/RealEstateBaseWebApi/Properties/serviceDependencies.testwebapp82 - Web Deploy.json
