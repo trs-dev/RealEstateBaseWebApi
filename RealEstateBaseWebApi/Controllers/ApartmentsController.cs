@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RealEstateBaseWebApi.Models;
+using static RealEstateBaseWebApi.Models.Requests;
 
 namespace RealEstateBaseWebApi.Controllers
 {
@@ -24,7 +25,7 @@ namespace RealEstateBaseWebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Apartment>>> GetApartments()
         {
-            return await _context.Apartments.ToListAsync();
+            return await _context.Apartments.OrderBy(x => x.Id).ToListAsync();
         }
 
         // GET: api/Apartments/5
@@ -45,8 +46,16 @@ namespace RealEstateBaseWebApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutApartment(int id, Apartment apartment)
+        public async Task<IActionResult> PutApartment(int id, ApartmentRequest apartmentRequest)
         {
+            Apartment apartment = apartmentRequest.Apartment;
+            string token = apartmentRequest.token;
+
+            if (!Security.TokenIsValid(token))
+            {
+                return StatusCode(401);
+            }
+
             if (id != apartment.Id)
             {
                 return BadRequest();
@@ -77,8 +86,15 @@ namespace RealEstateBaseWebApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Apartment>> PostApartment(Apartment apartment)
+        public async Task<ActionResult<Apartment>> PostApartment(ApartmentRequest apartmentRequest)
         {
+            Apartment apartment = apartmentRequest.Apartment;
+            string token = apartmentRequest.token;
+
+            if (!Security.TokenIsValid(token))
+            {
+                return StatusCode(401);
+            }
             _context.Apartments.Add(apartment);
             await _context.SaveChangesAsync();
 

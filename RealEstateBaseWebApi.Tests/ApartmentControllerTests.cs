@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using static RealEstateBaseWebApi.Models.Requests;
 
 namespace RealEstateBaseWebApi.Tests
 {
@@ -41,9 +42,15 @@ namespace RealEstateBaseWebApi.Tests
         public async Task PostApartment_ReturnApartment()
         {
             // Arrange
-            string expected = JsonConvert.SerializeObject(testApartmens[0]);
+            string expected = JsonConvert.SerializeObject(testApartments[0]);
             string actual;
-            StringContent content = new StringContent(expected, Encoding.UTF8, "application/json");
+
+            ApartmentRequest apartmentRequest = new ApartmentRequest
+            {
+                Apartment = testApartments[0],
+                token = Security.Token
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(apartmentRequest), Encoding.UTF8, "application/json");
 
             // Act
             var response = await _client.PostAsync("api/apartments", content);
@@ -76,9 +83,15 @@ namespace RealEstateBaseWebApi.Tests
         public async Task GetApartmentsById_ReturnApartment()
         {
             // Arrange
-            string expected = JsonConvert.SerializeObject(testApartmens[0]);
+            string expected = JsonConvert.SerializeObject(testApartments[0]);
             string actual;
-            StringContent content = new StringContent(expected, Encoding.UTF8, "application/json");
+
+            ApartmentRequest apartmentRequest = new ApartmentRequest
+            {
+                Apartment = testApartments[0],
+                token = Security.Token
+            };
+           StringContent content = new StringContent(JsonConvert.SerializeObject(apartmentRequest), Encoding.UTF8, "application/json");
 
             // Act
             var response = await _client.PostAsync("api/apartments", content);
@@ -104,9 +117,14 @@ namespace RealEstateBaseWebApi.Tests
         public async Task PutApartment_ReturnApartment()
         {
             // Arrange
-            string expected = JsonConvert.SerializeObject(testApartmens[1]);
+            string expected = JsonConvert.SerializeObject(testApartments[1]);
             string actual;
-            StringContent content = new StringContent(JsonConvert.SerializeObject(testApartmens[0]), Encoding.UTF8, "application/json");
+            ApartmentRequest apartmentRequest = new ApartmentRequest
+            {
+                Apartment = testApartments[0],
+                token = Security.Token
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(apartmentRequest), Encoding.UTF8, "application/json");
 
             // Act
             var response = await _client.PostAsync("api/apartments", content);
@@ -115,8 +133,13 @@ namespace RealEstateBaseWebApi.Tests
             var actualObj = JsonConvert.DeserializeObject<Apartment>(responseString);
             int apartmentId = actualObj.Id;
 
-            testApartmens[1].Id = apartmentId;
-            content = new StringContent(JsonConvert.SerializeObject(testApartmens[1]), Encoding.UTF8, "application/json");
+            testApartments[1].Id = apartmentId;
+            apartmentRequest = new ApartmentRequest
+            {
+                Apartment = testApartments[1],
+                token = Security.Token
+            };
+            content = new StringContent(JsonConvert.SerializeObject(apartmentRequest), Encoding.UTF8, "application/json");
             response = await _client.PutAsync("api/apartments/" + apartmentId.ToString(), content);
             response.EnsureSuccessStatusCode();
             response = await _client.GetAsync("api/apartments/" + apartmentId.ToString());
@@ -133,9 +156,15 @@ namespace RealEstateBaseWebApi.Tests
         public async Task DeleteApartment_ReturnApartment()
         {
             // Arrange
-            string expected = JsonConvert.SerializeObject(testApartmens[0]);
+            string expected = JsonConvert.SerializeObject(testApartments[0]);
             string actual;
-            StringContent content = new StringContent(expected, Encoding.UTF8, "application/json");
+
+            ApartmentRequest apartmentRequest = new ApartmentRequest
+            {
+                Apartment = testApartments[0],
+                token = Security.Token
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(apartmentRequest), Encoding.UTF8, "application/json");
 
             // Act
             var response = await _client.PostAsync("api/apartments", content);
@@ -143,7 +172,7 @@ namespace RealEstateBaseWebApi.Tests
             var responseString = await response.Content.ReadAsStringAsync();
             var actualObj = JsonConvert.DeserializeObject<Apartment>(responseString);
             int apartmentId = actualObj.Id;
-            testApartmens[1].Id = apartmentId;
+            testApartments[1].Id = apartmentId;
             response = await _client.DeleteAsync("api/apartments/" + apartmentId.ToString());
             response.EnsureSuccessStatusCode();
             responseString = await response.Content.ReadAsStringAsync();
@@ -165,7 +194,7 @@ namespace RealEstateBaseWebApi.Tests
 
 
 
-        private List<Apartment> testApartmens = new List<Apartment>()
+        private List<Apartment> testApartments = new List<Apartment>()
         {
             new Apartment(){
                 Rooms = 1,

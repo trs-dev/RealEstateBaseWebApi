@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RealEstateBaseWebApi.Models;
+using static RealEstateBaseWebApi.Models.Requests;
 
 namespace RealEstateBaseWebApi.Controllers
 {
@@ -24,7 +25,7 @@ namespace RealEstateBaseWebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NonResidentialPremise>>> GetNonResidentialPremises()
         {
-            return await _context.NonResidentialPremises.ToListAsync();
+            return await _context.NonResidentialPremises.OrderBy(x => x.Id).ToListAsync();
         }
 
         // GET: api/NonResidentialPremises/5
@@ -45,8 +46,16 @@ namespace RealEstateBaseWebApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutNonResidentialPremise(int id, NonResidentialPremise nonResidentialPremise)
+        public async Task<IActionResult> PutNonResidentialPremise(int id, NonResidentialPremiseRequest nonResidentialPremiseRequest)
         {
+            NonResidentialPremise nonResidentialPremise = nonResidentialPremiseRequest.NonResidentialPremise;
+            string token = nonResidentialPremiseRequest.token;
+
+            if (!Security.TokenIsValid(token))
+            {
+                return StatusCode(401);
+            }
+
             if (id != nonResidentialPremise.Id)
             {
                 return BadRequest();
@@ -77,8 +86,15 @@ namespace RealEstateBaseWebApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<NonResidentialPremise>> PostNonResidentialPremise(NonResidentialPremise nonResidentialPremise)
+        public async Task<ActionResult<NonResidentialPremise>> PostNonResidentialPremise(NonResidentialPremiseRequest nonResidentialPremiseRequest)
         {
+            NonResidentialPremise nonResidentialPremise = nonResidentialPremiseRequest.NonResidentialPremise;
+            string token = nonResidentialPremiseRequest.token;
+
+            if (!Security.TokenIsValid(token))
+            {
+                return StatusCode(401);
+            }
             _context.NonResidentialPremises.Add(nonResidentialPremise);
             await _context.SaveChangesAsync();
 

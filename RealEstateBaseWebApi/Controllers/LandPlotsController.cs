@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RealEstateBaseWebApi.Models;
+using static RealEstateBaseWebApi.Models.Requests;
 
 namespace RealEstateBaseWebApi.Controllers
 {
@@ -24,7 +25,7 @@ namespace RealEstateBaseWebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LandPlot>>> GetLandPlots()
         {
-            return await _context.LandPlots.ToListAsync();
+            return await _context.LandPlots.OrderBy(x => x.Id).ToListAsync();
         }
 
         // GET: api/LandPlots/5
@@ -45,8 +46,14 @@ namespace RealEstateBaseWebApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLandPlot(int id, LandPlot landPlot)
+        public async Task<IActionResult> PutLandPlot(int id, LandPlotRequest landPlotRequest)
         {
+            LandPlot landPlot = landPlotRequest.LandPlot;
+            string token = landPlotRequest.token;
+            if (!Security.TokenIsValid(token))
+            {
+                return StatusCode(401);
+            }
             if (id != landPlot.Id)
             {
                 return BadRequest();
@@ -77,8 +84,14 @@ namespace RealEstateBaseWebApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<LandPlot>> PostLandPlot(LandPlot landPlot)
+        public async Task<ActionResult<LandPlot>> PostLandPlot(LandPlotRequest landPlotRequest)
         {
+            LandPlot landPlot = landPlotRequest.LandPlot;
+            string token = landPlotRequest.token;
+            if (!Security.TokenIsValid(token))
+            {
+                return StatusCode(401);
+            }
             _context.LandPlots.Add(landPlot);
             await _context.SaveChangesAsync();
 
